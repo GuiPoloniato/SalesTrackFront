@@ -1,0 +1,19 @@
+.body-dashboard {
+    display: flex;
+    width: 100vw;
+}
+
+.body-dashboard .content-dashboard{
+    flex: 1;
+    background-color: #f8fafc;
+}
+
+.body-dashboard .content-dashboard .title-page{
+    display: flex;
+    height: 9vh;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}

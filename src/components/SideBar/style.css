@@ -12,19 +12,35 @@
     height: 100%;
 }
 
+.body-sidebar .box-vertical .header-dashboard .logo{
+    display: flex;
+    align-items: center;
+    padding: 25px;
+}
+
 .body-sidebar .box-vertical .header-dashboard h1{
     color: white;
     font-weight: 700;
     font-size: 22px;
-    padding: 25px;
+    padding-left: 10px;
 }
 
 .body-sidebar .box-vertical .header-dashboard hr{
     background-color: #1e293b62;
 }
 
+.body-sidebar .box-vertical .header-dashboard .salesTrack-img{
+    width: 25px;
+    height: 25px;
+}
+
 .body-sidebar .box-vertical .sidebar-menu{
     margin-top: 20px;
+}
+
+.body-sidebar .box-vertical .sidebar-menu img{ 
+    width: 25px;
+    height: 25px;
 }
 
 .body-sidebar .box-vertical .sidebar-menu .menu-select{
