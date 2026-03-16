@@ -1,23 +1,28 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "../pages/dashboard/dashboard";
 import Vendas from "../pages/vendas/vendas";
 import Historico from "../pages/historico/historico";
 import Produtos from "../pages/produtos/produtos";
 import Clientes from "../pages/clientes/clientes";
 import Relatorios from "../pages/relatorios/relatorios";
+import Login from "../pages/login/login";
+import PrivateRoute from "../components/PrivateRoute/PrivateRoute";
 
 function Router() {
-    return(
+    return (
         <BrowserRouter>
             <Routes>
-                <Route path="/Dashboard" element={<Dashboard />} />
-                <Route path="/Vendas" element={<Vendas />} />
-                <Route path="/Historico" element={<Historico />} />
-                <Route path="/Produtos" element={<Produtos />} />
-                <Route path="/Clientes" element={<Clientes />} />
-                <Route path="/Relatorios" element={<Relatorios />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>}/>
+                <Route path="/vendas" element={<PrivateRoute><Vendas /></PrivateRoute>} />
+                <Route path="/historico" element={<PrivateRoute><Historico /></PrivateRoute>}/>
+                <Route path="/produtos" element={<PrivateRoute><Produtos /></PrivateRoute>}/>
+                <Route path="/clientes" element={<PrivateRoute><Clientes /></PrivateRoute>}/>
+                <Route path="/relatorios" element={<PrivateRoute><Relatorios /></PrivateRoute>}/>
             </Routes>
         </BrowserRouter>
-    )
+    );
 }
+
 export default Router;
