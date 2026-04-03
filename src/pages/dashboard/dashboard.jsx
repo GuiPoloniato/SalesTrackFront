@@ -10,6 +10,12 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  Legend,
 } from "recharts";
 import './style.css';
 
@@ -37,10 +43,44 @@ function CustomTooltip({ active, payload, label }) {
   );
 }
 
+function PieTooltip({ active, payload }) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="chart-tooltip">
+      <p className="tooltip-label">{payload[0].name}</p>
+      <p className="tooltip-value">{payload[0].value} vendas</p>
+    </div>
+  );
+}
+
+function BarTooltip({ active, payload, label }) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="chart-tooltip">
+      <p className="tooltip-label">{label}</p>
+      <p className="tooltip-value">
+        {Number(payload[0].value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+      </p>
+    </div>
+  );
+}
+
+const PIE_COLORS = ['#22c55e', '#3b82f6', '#8b5cf6', '#f59e0b', '#64748b'];
+const BAR_COLORS = ['#2563eb', '#7c3aed', '#ec4899', '#f59e0b', '#10b981', '#06b6d4', '#f43f5e', '#6366f1'];
+
+const PAYMENT_LABELS = {
+  dinheiro: 'Dinheiro',
+  cartao_credito: 'Cartão Crédito',
+  cartao_debito: 'Cartão Débito',
+  pix: 'PIX',
+  outro: 'Outro',
+};
+
 function Dashboard() {
   const [kpis, setKpis] = useState(null);
   const [vendas, setVendas] = useState([]);
   const [produtos, setProdutos] = useState([]);
+  const [vendasRaw, setVendasRaw] = useState([]);
   const [loading, setLoading] = useState(true);
   
   const { showNotification } = useNotification();
@@ -57,10 +97,11 @@ function Dashboard() {
       setLoading(true);
 
       try {
-        const [kpisRes, vendasRes, produtosRes] = await Promise.all([
+        const [kpisRes, vendasRes, produtosRes, vendasListRes] = await Promise.all([
           api.get('/dashboard/kpis?periodo=30'),
           api.get('/dashboard/vendas-periodo?dias=30'),
           api.get('/dashboard/produtos-mais-vendidos?limite=10'),
+          api.get('/vendas').catch(() => ({ data: [] })),
         ]);
 
         setKpis(kpisRes.data);
@@ -73,8 +114,8 @@ function Dashboard() {
           }),
         }));
         setVendas(vendasFormatadas);
-
         setProdutos(produtosRes.data);
+        setVendasRaw(vendasListRes.data);
       } catch (err) {
         console.error('Erro ao carregar dashboard:', err);
         showNotification(
@@ -88,6 +129,51 @@ function Dashboard() {
 
     carregarDados();
   }, [showNotification]);
+
+  const paymentDistribution = (() => {
+    if (!vendasRaw.length) return [];
+    const counts = {};
+    vendasRaw.forEach((v) => {
+      const forma = v.formaPagamento || 'outro';
+      counts[forma] = (counts[forma] || 0) + 1;
+    });
+    return Object.entries(counts).map(([key, value]) => ({
+      name: PAYMENT_LABELS[key] || key,
+      value,
+    }));
+  })();
+
+  const weeklyRevenue = (() => {
+    if (!vendasRaw.length) return [];
+    const now = new Date();
+    const weeks = [];
+    for (let i = 3; i >= 0; i--) {
+      const weekStart = new Date(now);
+      weekStart.setDate(now.getDate() - (i + 1) * 7);
+      const weekEnd = new Date(now);
+      weekEnd.setDate(now.getDate() - i * 7);
+      
+      const weekSales = vendasRaw.filter((v) => {
+        const d = new Date(v.dataVenda);
+        return d >= weekStart && d < weekEnd;
+      });
+      
+      const receita = weekSales.reduce((sum, v) => sum + (v.valorFinal || 0), 0);
+      const qtd = weekSales.length;
+      
+      weeks.push({
+        name: `Sem ${4 - i}`,
+        receita,
+        vendas: qtd,
+      });
+    }
+    return weeks;
+  })();
+
+  const renderCustomPieLabel = ({ name, percent }) => {
+    if (percent < 0.05) return null;
+    return `${(percent * 100).toFixed(0)}%`;
+  };
 
   return (
     <div className="body-dashboard">
@@ -228,6 +314,99 @@ function Dashboard() {
                     <p className="chart-empty">Nenhum produto vendido</p>
                   )}
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* NEW: Second row of charts */}
+          {!loading && (
+            <div className="charts-row">
+              <div className="chart-card">
+                <div className="chart-card-header">
+                  <h2>Vendas por Forma de Pagamento</h2>
+                  <span className="chart-badge">Distribuição</span>
+                </div>
+                {paymentDistribution.length > 0 ? (
+                  <div className="pie-chart-container">
+                    <ResponsiveContainer width="100%" height={280}>
+                      <PieChart>
+                        <Pie
+                          data={paymentDistribution}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={100}
+                          paddingAngle={4}
+                          dataKey="value"
+                          label={renderCustomPieLabel}
+                          labelLine={false}
+                        >
+                          {paymentDistribution.map((_, index) => (
+                            <Cell key={index} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip content={<PieTooltip />} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div className="pie-legend">
+                      {paymentDistribution.map((entry, index) => (
+                        <div className="pie-legend-item" key={index}>
+                          <span
+                            className="pie-legend-dot"
+                            style={{ background: PIE_COLORS[index % PIE_COLORS.length] }}
+                          />
+                          <span className="pie-legend-label">{entry.name}</span>
+                          <span className="pie-legend-value">{entry.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="chart-empty">
+                    <p>Nenhum dado de pagamento disponível</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="chart-card">
+                <div className="chart-card-header">
+                  <h2>Receita Semanal</h2>
+                  <span className="chart-badge">Últimas 4 semanas</span>
+                </div>
+                {weeklyRevenue.length > 0 ? (
+                  <ResponsiveContainer width="100%" height={280}>
+                    <BarChart data={weeklyRevenue} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <XAxis
+                        dataKey="name"
+                        tick={{ fontSize: 12, fill: '#94a3b8' }}
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <YAxis
+                        tick={{ fontSize: 11, fill: '#94a3b8' }}
+                        axisLine={false}
+                        tickLine={false}
+                        tickFormatter={(v) => `R$${v}`}
+                      />
+                      <Tooltip content={<BarTooltip />} />
+                      <Bar
+                        dataKey="receita"
+                        fill="#2563eb"
+                        radius={[8, 8, 0, 0]}
+                        maxBarSize={50}
+                      >
+                        {weeklyRevenue.map((_, index) => (
+                          <Cell key={index} fill={BAR_COLORS[index % BAR_COLORS.length]} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="chart-empty">
+                    <p>Nenhum dado semanal disponível</p>
+                  </div>
+                )}
               </div>
             </div>
           )}
