@@ -5,6 +5,7 @@ import Historico from "../pages/historico/historico";
 import Produtos from "../pages/produtos/produtos";
 import Clientes from "../pages/clientes/clientes";
 import Relatorios from "../pages/relatorios/relatorios";
+import Configuracoes from "../pages/configuracoes/configuracoes";
 import Login from "../pages/login/login";
 import PrivateRoute from "../components/PrivateRoute/PrivateRoute";
 
@@ -20,6 +21,7 @@ function Router() {
                 <Route path="/produtos" element={<PrivateRoute><Produtos /></PrivateRoute>}/>
                 <Route path="/clientes" element={<PrivateRoute><Clientes /></PrivateRoute>}/>
                 <Route path="/relatorios" element={<PrivateRoute><Relatorios /></PrivateRoute>}/>
+                <Route path="/configuracoes" element={<PrivateRoute><Configuracoes /></PrivateRoute>}/>
             </Routes>
         </BrowserRouter>
     );

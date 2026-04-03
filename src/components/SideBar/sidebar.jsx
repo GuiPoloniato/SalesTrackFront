@@ -7,6 +7,7 @@ import Historico from "../../assets/sidebar/historico.svg";
 import Produtos from "../../assets/sidebar/produtos.svg";
 import Clientes from "../../assets/sidebar/clientes.svg";
 import Relatorios from "../../assets/sidebar/relatorios.svg";
+import ConfigIcon from "../../assets/sidebar/configuracoes.svg";
 import SalesTrack from "../../assets/salesTrack.svg";
 import './style.css';
 
@@ -49,7 +50,7 @@ function Sidebar() {
                     </div>
                     <div className={`menu-select ${itemActive === '/historico' ? 'ativo' : ''}`} onClick={() => handleItemClick('/historico')}>
                         <img src={Historico} alt="" />
-                        <span>Historico</span>
+                        <span>Histórico</span>
                     </div>
                     <div className={`menu-select ${itemActive === '/produtos' ? 'ativo' : ''}`} onClick={() => handleItemClick('/produtos')}>
                         <img src={Produtos} alt="" />
@@ -61,7 +62,11 @@ function Sidebar() {
                     </div>
                     <div className={`menu-select ${itemActive === '/relatorios' ? 'ativo' : ''}`} onClick={() => handleItemClick('/relatorios')}>
                         <img src={Relatorios} alt="" />
-                        <span>Relatorios</span>
+                        <span>Relatórios</span>
+                    </div>
+                    <div className={`menu-select ${itemActive === '/configuracoes' ? 'ativo' : ''}`} onClick={() => handleItemClick('/configuracoes')}>
+                        <img src={ConfigIcon} alt="" />
+                        <span>Configurações</span>
                     </div>
                 </div>
                 <hr className="hr-footer" />
