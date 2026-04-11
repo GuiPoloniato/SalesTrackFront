@@ -114,13 +114,26 @@ function Historico() {
             render: (val) => <strong>{fmt(val)}</strong>,
         },
         {
-            key: 'formaPagamento',
+            key: 'pagamentos',
             label: 'Pagamento',
-            render: (val) => (
-                <span className={`badge ${badgePagamento(val)}`}>
-                    {formatarPagamento(val)}
-                </span>
-            ),
+            render: (pagamentos, row) => {
+                if (pagamentos && pagamentos.length > 0) {
+                    return (
+                        <div className="badges-pagamento">
+                            {pagamentos.map((p, i) => (
+                                <span key={i} className={`badge ${badgePagamento(p.formaPagamento)}`}>
+                                    {formatarPagamento(p.formaPagamento)}
+                                </span>
+                            ))}
+                        </div>
+                    );
+                }
+                return (
+                    <span className={`badge ${badgePagamento(row.formaPagamento)}`}>
+                        {formatarPagamento(row.formaPagamento)}
+                    </span>
+                );
+            },
         },
     ];
 
@@ -194,9 +207,26 @@ function Historico() {
                             <div className="detail-row">
                                 <span className="detail-label">Pagamento</span>
                                 <span className="detail-value">
-                                    <span className={`badge ${badgePagamento(vendaSelecionada.formaPagamento)}`}>
-                                        {formatarPagamento(vendaSelecionada.formaPagamento)}
-                                    </span>
+                                    {vendaSelecionada.pagamentos && vendaSelecionada.pagamentos.length > 1 ? (
+                                        <div className="detail-pagamentos-lista">
+                                            {vendaSelecionada.pagamentos.map((p, i) => (
+                                                <div key={i} className="detail-pagamento-item">
+                                                    <span className={`badge ${badgePagamento(p.formaPagamento)}`}>
+                                                        {formatarPagamento(p.formaPagamento)}
+                                                    </span>
+                                                    <span className="detail-pagamento-valor">{fmt(p.valor)}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <span className={`badge ${badgePagamento(
+                                            vendaSelecionada.pagamentos?.[0]?.formaPagamento || vendaSelecionada.formaPagamento
+                                        )}`}>
+                                            {formatarPagamento(
+                                                vendaSelecionada.pagamentos?.[0]?.formaPagamento || vendaSelecionada.formaPagamento
+                                            )}
+                                        </span>
+                                    )}
                                 </span>
                             </div>
 

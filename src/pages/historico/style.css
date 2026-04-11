@@ -63,3 +63,34 @@
     font-weight: 500;
     border-bottom: 1px solid #f1f5f9;
 }
+
+/* ── Múltiplos Pagamentos (badges na tabela) ─────────────────────── */
+.badges-pagamento {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.badges-pagamento .badge {
+    font-size: 11px;
+    padding: 2px 8px;
+}
+
+/* ── Pagamentos no Modal de Detalhes ─────────────────────────────── */
+.detail-pagamentos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.detail-pagamento-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.detail-pagamento-valor {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+}
