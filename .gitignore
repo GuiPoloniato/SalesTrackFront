@@ -7,15 +7,28 @@
 logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
 # Dependências (Node)
 node_modules/
 
-# Pasta de build de produção
+# Build
 dist/
 dist-ssr/
 
-# Arquivos de editores/sistema
+# Arquivos locais
+*.local
+
+# Editor / Sistema
 .vscode/
+!.vscode/extensions.json
 .idea/
 .DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
