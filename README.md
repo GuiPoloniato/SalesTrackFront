@@ -1,16 +1,103 @@
-# React + Vite
+# SalesTrack - Sistema de Gestão de Vendas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema web de gestão de vendas com dashboard, controle de produtos, clientes e histórico de vendas.
 
-Currently, two official plugins are available:
+## Evolução do Projeto (Histórico)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Este repositório está organizado para mostrar a evolução técnica do sistema ao longo do desenvolvimento:
 
-## React Compiler
+- **v1 (Protótipo Inicial):** Modelo inicial com arquitetura e interface primárias. Foco na marcação básica com HTML, CSS e JavaScript estático "bruto".
+- **v2 (Aplicação API REST):** Reestruturação do sistema para o formato de API backend e banco de dados, separando a lógica de dados da interface.
+- **v3 (Integração com React):** Versão atualizada utilizando React + Vite para o frontend, consumindo a API e oferecendo uma experiência de usuário moderna.
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## Integrantes do Grupo
 
-## Expanding the ESLint configuration
+- Matheus Sabino Ribeiro - 2313148
+- André Marcos de Sousa Tavares - 2313280
+- Gabriel Pedro Silva Dutra - 2310154
+- Guilherme Poloniato Salomão - 2310359
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Tecnologias Utilizadas
+
+| Frontend | React + Vite |
+| Backend | Python com Flask |
+| Banco de Dados | MySQL |
+
+## Como Executar
+
+### Pré-requisitos
+
+- [Python 3.11+](https://www.python.org/) instalado
+- [Node.js 18+](https://nodejs.org/) instalado
+- [MySQL 9.5+](https://downloads.mysql.com/archives/community/) instalado e rodando
+
+### 1. Banco de Dados
+
+Abra o **CMD como administrador** e execute os comandos abaixo:
+
+```bash
+cd "C:\Program Files\MySQL\MySQL Server 9.5\bin"
+mysql -u root -p
+```
+
+Digite sua senha do MySQL. Em seguida, execute o script abaixo:
+
+```sql
+source C:/caminho/para/SalesTrack-V3/database/database_setup.sql
+```
+
+> Exemplo: `source C:/Users/andre/OneDrive/Documentos/SalesTrack-V3/database/database_setup.sql`
+
+### 2. Configurar o `.env`
+
+Abra o arquivo `backend_V2/.env` e coloque a sua senha do MySQL:
+
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=sua_senha
+DB_NAME=salestrack
+```
+
+### 3. Backend
+
+Abra um terminal, entre na pasta `backend_V2` e execute:
+
+```bash
+cd backend_V2
+pip install -r requirements.txt
+python app.py
+```
+
+> O `pip install` só é necessário na primeira vez.
+
+O servidor ficará disponível em: `http://localhost:5000`
+
+### 4. Frontend (React)
+
+Abra um **segundo terminal**, entre na pasta `frontend-react` e execute:
+
+```bash
+cd frontend_react
+npm install
+npm run dev
+```
+
+> O `npm install` só é necessário na primeira vez.
+
+O sistema ficará disponível em: `http://localhost:5173`
+
+> Os dois terminais (backend e frontend) precisam ficar abertos enquanto o sistema estiver em uso.
+
+---
+
+## Credenciais de Teste
+
+| Perfil | Email | Senha |
+|--------|-------|-------|
+| Administrador | admin@salestrack.com | admin123 |
+| Vendedor | vendedor@salestrack.com | vendedor123 |
+
+---
+
+🔗 **Backend:** O código da API e banco de dados está localizado no repositório [SalesTrack-Back](https://github.com/AndreST141/SalesTrack-Back)
